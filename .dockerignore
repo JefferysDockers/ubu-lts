@@ -1,0 +1,8 @@
+build.sh
+OsBase.Rproj
+.*
+README.md
+*.html
+SHA256SUMS
+TAG
+
