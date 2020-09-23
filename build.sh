@@ -9,7 +9,7 @@
 # Note that some of the automation available for building from the DockerHub
 # UI may be ignored due to replacing the build step with the hook script.
 
-export DOCKER_REPO="ubu-lts"
+export DOCKER_REPO="jefferys/ubu-lts"
 export DOCKERFILE_PATH="Dockerfile"
 
 ./hooks/build

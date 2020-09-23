@@ -12,12 +12,14 @@
 ###
 
 # Describing the image
+# imageName is the fully qualified image name, baseName just the repo
 imageName="${DOCKER_REPO}"
+imageBaseName="${DOCKER_REPO##*/}"
 dockerfilePath="${DOCKERFILE_PATH}"
 spdxLicense=""
 licenseFile="https://ubuntu.com/licensing"
 baseImagePrefix="scratch"
-title="${imageName} - Base OS derived from Ubuntu."
+title="${imageBaseName} - Base OS derived from Ubuntu."
 description="Based on Ubuntu this is a completely local build of a base Docker from scratch."
 keywords="Linux, Ubuntu, scratch, os"
 
@@ -60,41 +62,41 @@ afterPos=$(( ${#created} - 2 ))
 created="${created:0:${afterPos}}:${created:${afterPos}}"
 
 # Full label namespace with unique image id prepended
-NS="${imageRepoOwner}.${imageName}.${labelSchema}"
+NS="${imageRepoOwner}.${imageBaseName}.${labelSchema}"
 
 ###
 # Build command.
 ###
 
 docker build \
-  --label "${NS}.base-prefix=${baseImagePrefix}" \
-  --label "${NS}.name=${imageName}" \
-  --label "${NS}.home=${imageRepoRootUrl}/${imageRepoOwner}/${imageName}" \
-  --label "${NS}.version=${TAG}" \
-  --label "${NS}.maintainer=${maintainer}" \
-  --label "${NS}.source-version=${sourceVersion}" \
-  --label "${NS}.source-home=${sourceRepoRootUrl}/${sourceRepoOwner}/${imageName}" \
-  --label "${NS}.source-maintainer=${maintainer}" \
-  --label "${NS}.pull=${imageRepoOwner}/${imageName}:$TAG" \
-  --label "${NS}.license-spdx=${spdxLicense}" \
-  --label "${NS}.license-file=${licenseFile}" \
-  --label "${NS}.vendor=${vendor}" \
-  --label "${NS}.vendorUrl=${vendorUrl}" \
-  --label "${NS}.title=${title}" \
-  --label "${NS}.description=${description}" \
-  --label "${NS}.content-home=${contentHome}" \
-  --label "${NS}.content-version=${contentVersion}" \
-  --label "${NS}.content-source=${contentSource}" \
-  --label "${NS}.content-license-spdx=${contentSpdxLicense}" \
-  --label "${NS}.content-license-file=${contentLicenseFile}" \
-  --label "${NS}.content-vendor=${contentVendor}" \
-  --label "${NS}.content-vendorUrl=${contentVendorUrl}" \
-  --label "${NS}.content-title=${contentTitle}" \
-  --label "${NS}.content-description=${contentDescription}" \
-  --label "${NS}.created=${created}" \
-  --label "${NS}.label-schema-version=${labelSchemaVersion}" \
-  --tag "${imageRepoOwner}/${imageName}:latest" \
-  --tag "${imageRepoOwner}/${imageName}:${contentVersion}" \
-  --tag "${imageRepoOwner}/${imageName}:${contentVersion}-${sourceVersion}" \
+  --label "${NS}.base-prefix=\"${baseImagePrefix}\"" \
+  --label "${NS}.name=\"${imageBaseName}\"" \
+  --label "${NS}.home=\"${imageRepoRootUrl}/${imageRepoOwner}/${imageBaseName}\"" \
+  --label "${NS}.version=\"${TAG}\"" \
+  --label "${NS}.maintainer=\"${maintainer}\"" \
+  --label "${NS}.source-version=\"${sourceVersion}\"" \
+  --label "${NS}.source-home=\"${sourceRepoRootUrl}/${sourceRepoOwner}/${imageBaseName}\"" \
+  --label "${NS}.source-maintainer=\"${maintainer}\"" \
+  --label "${NS}.pull=\"${imageRepoOwner}/${imageBaseName}:$TAG\"" \
+  --label "${NS}.license-spdx=\"${spdxLicense}\"" \
+  --label "${NS}.license-file=\"${licenseFile}\"" \
+  --label "${NS}.vendor=\${vendor}\"" \
+  --label "${NS}.vendorUrl=\"${vendorUrl}\"" \
+  --label "${NS}.title=\"${title}\"" \
+  --label "${NS}.description=\"${description}\"" \
+  --label "${NS}.content-home=\"${contentHome}\"" \
+  --label "${NS}.content-version=\"${contentVersion}\"" \
+  --label "${NS}.content-source=\"${contentSource}\"" \
+  --label "${NS}.content-license-spdx=\"${contentSpdxLicense}\"" \
+  --label "${NS}.content-license-file=\"${contentLicenseFile}\"" \
+  --label "${NS}.content-vendor=\"${contentVendor}\"" \
+  --label "${NS}.content-vendorUrl=\"${contentVendorUrl}\"" \
+  --label "${NS}.content-title=\"${contentTitle}\"" \
+  --label "${NS}.content-description=\"${contentDescription}\"" \
+  --label "${NS}.created=\"${created}\"" \
+  --label "${NS}.label-schema-version=\"${labelSchemaVersion}\"" \
+  --tag "${imageName}:latest" \
+  --tag "${imageName}:${contentVersion}" \
+  --tag "${imageName}:${contentVersion}-${sourceVersion}" \
   -f ${dockerfilePath} \
   .
