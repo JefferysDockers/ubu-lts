@@ -1,8 +1,9 @@
 FROM scratch
 
-# Essentially the same as the Docker file
+# Essentially the same as the Docker file at
 #    https://github.com/tianon/docker-brew-ubuntu-core/blob/dist-amd64/focal/Dockerfile
-# That repo and hence this file is licensed under the Apache License 2.0
+# That repo and hence this file is licensed under the Apache License 2.0. Most
+# of the comments have been rewritten here to include details locally.
 
 # Add the entire distro to the root of the container
 # This file is downloaded from https://partner-images.canonical.com/core/
@@ -51,7 +52,7 @@ RUN set -xe \
 # Package installation uses and leaves caches, but these are not needed after
 # the Docker build. So need to ensure apt-clean is run. But apparently there
 # is some difficulty in doing this, so caches are cleared using post-install
-# hooks and config paramters.
+# hooks and config parameters.
 	&& echo 'DPkg::Post-Invoke { "rm -f /var/cache/apt/archives/*.deb /var/cache/apt/archives/partial/*.deb /var/cache/apt/*.bin || true"; };' > /etc/apt/apt.conf.d/docker-clean \
 	&& echo 'APT::Update::Post-Invoke { "rm -f /var/cache/apt/archives/*.deb /var/cache/apt/archives/partial/*.deb /var/cache/apt/*.bin || true"; };' >> /etc/apt/apt.conf.d/docker-clean \
 	&& echo 'Dir::Cache::pkgcache ""; Dir::Cache::srcpkgcache "";' >> /etc/apt/apt.conf.d/docker-clean \
@@ -78,4 +79,4 @@ RUN set -xe \
    && mkdir -p /run/systemd && echo 'docker' > /run/systemd/container
 
 # Default action when running the container is to start a bash shell
-# CMD ["/bin/bash"]
+CMD ["/bin/bash"]
