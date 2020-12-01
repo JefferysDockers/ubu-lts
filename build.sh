@@ -6,10 +6,13 @@
 # The meat of the file is relocated to hooks/build to mesh easily with
 # DockerHub's auto build process.
 
-# Note that some of the automation available for building from the DockerHub
-# UI may be ignored due to replacing the build step with the hook script.
-
 export DOCKER_REPO="jefferys/ubu-lts"
 export DOCKERFILE_PATH="Dockerfile"
+TAG=$(git tag --sort committerdate)
+export TAG=${TAG##*$'\n'}
+if [[ -n "$TAG" ]]; then
+   echo "No tag available in the current repo" >&2
+   exit 1
+fi
 
 ./hooks/build

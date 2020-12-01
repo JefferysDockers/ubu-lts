@@ -8,18 +8,33 @@
 # the tag name in the repo.
 
 ###
-# Label input parameters
+# Labeling parameters using ENV or other labeling parameters
 ###
 
-# Describing the image
-# imageName is the fully qualified image name, baseName just the repo
+# The fully qualified image name with directory.
 imageName="${DOCKER_REPO}"
+
+# Just the base name of the repository
 imageBaseName="${DOCKER_REPO##*/}"
+
+# Path to the docker file relative to the root of this repository
 dockerfilePath="${DOCKERFILE_PATH}"
+
+# The container contents version, the part of the tag before the first "-"
+contentVersion="${TAG%%-*}"
+
+# The container build version, the rest of the tag after the first "-"
+sourceVersion="${TAG#*-}"
+
+title="${imageBaseName} - Base OS derived from Ubuntu."
+
+###
+# Static Labeling parameters
+###
+
 spdxLicense=""
 licenseFile="https://ubuntu.com/licensing"
 baseImagePrefix="scratch"
-title="${imageBaseName} - Base OS derived from Ubuntu."
 description="Based on Ubuntu this is a completely local build of a base Docker from scratch."
 keywords="Linux, Ubuntu, scratch, os"
 
@@ -47,14 +62,8 @@ sourceRepoRootUrl="https://github.com"
 maintainer="Stuart R. Jefferys <stuart_jefferys@med.unc.edu>"
 
 ###
-# End of label input parameters
+# End of labeling parameters
 ###
-
-# Get tag for image, and parse into parts: the before first "-" part (the tool
-# version) and the after first "-" part (the build version).
-read TAG < "TAG"
-contentVersion="${TAG%%-*}"
-sourceVersion="${TAG#*-}"
 
 # Time created
 created="$(date "+%Y-%m-%dT%H:%M:%S%z")"
@@ -95,8 +104,6 @@ docker build \
   --label "${NS}.content-description=\"${contentDescription}\"" \
   --label "${NS}.created=\"${created}\"" \
   --label "${NS}.label-schema-version=\"${labelSchemaVersion}\"" \
-  --tag "${imageName}:latest" \
-  --tag "${imageName}:${contentVersion}" \
   --tag "${imageName}:${contentVersion}-${sourceVersion}" \
   -f ${dockerfilePath} \
   .
