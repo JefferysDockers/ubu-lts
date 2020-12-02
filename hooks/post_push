@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# This hook is run by DockerHub when an auto-build is triggered, after the
+# push of the image built by the "build" hook script. It is used to add
+# extra tags to the image (and push them). This assumes a trigger is set up
+# at dockerhub to build whenever a new tag that looks like "x-y" is pushed
+# to the watched repo, and that the built image will have that tag by default.
+# The ENV variables are set in the DockerHub build environment
+
+contentVersion="${DOCKER_TAG%%-*}"
+buildVersion="${DOCKER_TAG#*-}"
+
+docker tag $IMAGE_NAME $DOCKER_REPO:$contentVersion
+docker push $DOCKER_REPO:$contentVersion
+
+docker tag $IMAGE_NAME $DOCKER_REPO:latest
+docker push $DOCKER_REPO:latest
