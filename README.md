@@ -1,3 +1,5 @@
+# ubu-lts - An Ubuntu base Docker from scratch.
+
 Note: This document serves dual purpose as the README for a GitHub repo and for the DockerHub repository built from it (as an automated build).
 
 This provides a base Docker container with the Ubuntu OS. It is called "ubu-lts" after the Ubuntu long-term service release and is versioned based on the date of the patch to the release. Currently, this is the so-called "Focal Fossa" version.
@@ -22,7 +24,7 @@ cd ubu-lts
 ./build.sh
 ```
 
-To just clone the latest tagged release, you can try leaving off the "--branch <tag>" option. That will work as long as the latest commit on the master branch of GitHub has a tag. It probably does, but if you get an error saying something about "no tag available" you'll have to try again, cloning the repo using the tag explicitly.
+To just clone the latest tagged release, you can try leaving off the "--branch \<tag\>" option. That will work as long as the latest commit on the master branch of GitHub has a tag. It probably does, but if you get an error saying something about "no tag available" you'll have to try again, cloning the repo using the tag explicitly.
 
 ## License notes
 
@@ -38,7 +40,7 @@ The Dockerfile in this repo is licensed under the Apache 2 License, based on the
 
 ### The container is "[Ubuntu](https://ubuntu.com/licensing)" licensed
 
-Ubuntu and Canonical have a reasonable interest in people not thinking my container has anything to do with them or their trademarks. So any use of Ubuntu or Canonical (or Focal, if that is also trademarked) is only to describe where the original sources can be obtained. This container is not otherwise associated with Ubuntu or Canonical and is in no way official or sanctioned. However, since it is as identical as I can make it, it is licensed under the same terms as their official container. The Ubuntu licence statement is [here](https://ubuntu.com/licensing)
+Ubuntu and Canonical have a reasonable interest in people not thinking my container has anything to do with them or their trademarks. So any use of Ubuntu or Canonical (or Focal, if that is also trademarked) is only to describe where the original sources can be obtained. This container is not otherwise associated with Ubuntu or Canonical and is in no way official or sanctioned. However, since its contents are as identical as I can make them, it is licensed under the same terms as their official container. The Ubuntu licence statement is [here](https://ubuntu.com/licensing)
 
 ### The Ubuntu tarball and manifest are "[Ubuntu](https://ubuntu.com/licensing)" licensed
 
@@ -60,14 +62,14 @@ https://github.com/moby/moby/blob/9a9fc01af8fb5d98b8eec0740716226fadb3735c/contr
 
 ### The distro tarball
 
-The core of the built-from-scratch distro is a pre-built tarball from the above Canonical/Ubuntu core link. It must be local (in the root build context alongside the Dockerfile) for the build to work. I have copied the local *.tar.gz and *.manifest from that remote site.
+The core of the built-from-scratch distro is a pre-built tarball from the above Canonical/Ubuntu core link. It must be local (in the root build context alongside the Dockerfile) for the build to work. I have copied the local *.tar.gz and `*.manifest` files from that remote site.
 
-I'm including the checksum file for the tarball so it can be verified locally. I don't think the tarball or the sha sums can be changed once committed so a pull by commit hash should get both unchanged. To independently verify the tarball and/or checksums, just check the original sources (if still available, they update pretty often). You can trust the commit hash pull thereafter.
+I'm including the checksum file for the tarball so it can be verified locally. I don't think the tarball or the sha sums can be changed once committed so if you do a pull by commit hash instead of by tag, it should get both unchanged. To independently verify the tarball and/or checksums, just check the original sources (if still available, they update pretty often and only the most recent are available). You can trust a commit hash pull thereafter.
 
-A "one-line" local test command in Bash for verifying sha256 against the local copy of the checksum file, assuming you have openssl
+A "one-line" local test command in Bash for verifying sha256 against a local copy of the checksum file, assuming you have openssl and are in the root directory of the repo:
 
     checkSha256() { diff <(openssl dgst -sha256 "$1" | cut -d " " -f 2) \
-    <(grep amd64 "$2" | cut -d " " -f 1) || echo "**FAIL**" }; \
+    <(grep amd64 "$2" | cut -d " " -f 1) || echo "**FAIL**" ; }; \
     checkSha256 "ubuntu-focal-core-cloudimg-amd64-root.tar.gz" "SHA256SUMS"
 
 ### The Dockerfile
@@ -86,4 +88,4 @@ Every commit on the master branch of the GitHub repo is a release and should be 
 
 Pushing a new tag with a hyphen to GitHub master branch will trigger DockerHub to build a new container using the hooks/build script and add it to the container repo with three tags, as "ubu-lts:latest" ubu-lts:\<container.tag\> and "ubu-lts:\<container.tag\>-\<build.tag\>".
 
-Note that there may be brief periods where the leading commit on the master branch is not tagged, or when the :latest tagged container does not match with the latest contents and build tagged versions due to time spent spent by DockerHub's build process and by parallel execution of commands.
+Note that there may be brief periods where the leading commit on the master branch is not tagged, or when the :latest tagged container does not match with the latest contents and /or build tagged versions due to time spent spent by DockerHub's build process and by parallel execution of commands.
