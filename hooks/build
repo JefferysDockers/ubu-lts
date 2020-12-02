@@ -3,9 +3,7 @@
 # This hook is run by DockerHub when an auto-build is triggered as the build
 # step. A trigger should be set up at dockerhub to build whenever a new tag
 # is pushed to master. It can also be run manually by executing the build.sh
-# script in the root of the Github repository. Note that the information in
-# the tag that is pushed is ignored; the file TAG is used as the source of
-# the tag name in the repo.
+# script in the root of the Github repository.
 
 ###
 # Labeling parameters using ENV or other labeling parameters
@@ -21,10 +19,10 @@ imageBaseName="${DOCKER_REPO##*/}"
 dockerfilePath="${DOCKERFILE_PATH}"
 
 # The container contents version, the part of the tag before the first "-"
-contentVersion="${TAG%%-*}"
+contentVersion="${DOCKER_TAG%%-*}"
 
 # The container build version, the rest of the tag after the first "-"
-sourceVersion="${TAG#*-}"
+sourceVersion="${DOCKER_TAG#*-}"
 
 title="${imageBaseName} - Base OS derived from Ubuntu."
 
@@ -81,12 +79,12 @@ docker build \
   --label "${NS}.base-prefix=\"${baseImagePrefix}\"" \
   --label "${NS}.name=\"${imageBaseName}\"" \
   --label "${NS}.home=\"${imageRepoRootUrl}/${imageRepoOwner}/${imageBaseName}\"" \
-  --label "${NS}.version=\"${TAG}\"" \
+  --label "${NS}.version=\"${DOCKER_TAG}\"" \
   --label "${NS}.maintainer=\"${maintainer}\"" \
   --label "${NS}.source-version=\"${sourceVersion}\"" \
   --label "${NS}.source-home=\"${sourceRepoRootUrl}/${sourceRepoOwner}/${imageBaseName}\"" \
   --label "${NS}.source-maintainer=\"${maintainer}\"" \
-  --label "${NS}.pull=\"${imageRepoOwner}/${imageBaseName}:$TAG\"" \
+  --label "${NS}.pull=\"${imageRepoOwner}/${imageBaseName}:DOCKER_TAG\"" \
   --label "${NS}.license-spdx=\"${spdxLicense}\"" \
   --label "${NS}.license-file=\"${licenseFile}\"" \
   --label "${NS}.vendor=\${vendor}\"" \
