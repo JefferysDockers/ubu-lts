@@ -10,7 +10,7 @@ export DOCKER_REPO="jefferys/ubu-lts"
 export DOCKERFILE_PATH="Dockerfile"
 TAG=$(git tag --sort committerdate)
 export DOCKER_TAG=${TAG##*$'\n'}
-if [[ -n "$DOCKER_TAG" ]]; then
+if [[ -z "$DOCKER_TAG" ]]; then
    echo "No tag available in the current repo" >&2
    exit 1
 fi
